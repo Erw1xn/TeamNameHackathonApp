@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Subject Management - SchedSmart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+      .modal {
+        transition: opacity 0.25s ease;
+      }
+      body.modal-active {
+        overflow-y: hidden;
+      }
+      #facultyList::-webkit-scrollbar {
+        width: 4px;
+      }
+      #facultyList::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      #facultyList::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 font-sans">
+    <div class="flex min-h-screen">
+      <!-- Sidebar -->
+      <aside class="w-64 bg-indigo-900 text-white flex flex-col fixed h-full">
+        <div
+          class="p-6 text-2xl font-bold border-b border-indigo-800 tracking-tight"
+        >
+          SchedSmart
+        </div>
+        <nav class="flex-grow p-4 space-y-2">
+          <a
+            href="Dashboard.html"
+            class="flex items-center gap-3 p-3 hover:bg-indigo-800 rounded-lg transition"
+          >
+            <i data-lucide="layout-dashboard"></i> Dashboard
+          </a>
+          <a
+            href="Rooms.html"
+            class="flex items-center gap-3 p-3 hover:bg-indigo-800 rounded-lg transition"
+          >
+            <i data-lucide="door-open"></i> Rooms
+          </a>
+          <a
+            href="Teacher.html"
+            class="flex items-center gap-3 p-3 hover:bg-indigo-800 rounded-lg transition"
+          >
+            <i data-lucide="users"></i> Teachers
+          </a>
+          <a
+            href="Subjects.html"
+            class="flex items-center gap-3 p-3 bg-indigo-800 rounded-lg transition"
+          >
+            <i data-lucide="book-open"></i> Subjects
+          </a>
+        </nav>
+      </aside>
+
+      <main class="flex-1 ml-64 p-8">
+        <div class="max-w-6xl mx-auto">
+          <header class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">Subject Management</h1>
+            <p class="text-gray-500">
+              Define course requirements and view expert faculty matches.
+            </p>
+          </header>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Form Section -->
+            <section class="lg:col-span-1">
+              <div
+                class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 sticky top-8"
+              >
+                <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                  <i data-lucide="plus-square" class="text-indigo-600"></i> New
+                  Subject
+                </h2>
+                <form
+                  action="process_subject.php"
+                  method="POST"
+                  class="space-y-4"
+                >
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700"
+                      >Subject Code & Title</label
+                    >
+                    <input
+                      type="text"
+                      name="subj_code"
+                      placeholder="e.g. CS101 - Intro to Programming"
+                      required
+                      class="mt-1 block w-full p-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
+                    />
+                  </div>
+                  <div class="grid grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700"
+                        >Units</label
+                      >
+                      <input
+                        type="number"
+                        name="units"
+                        placeholder="3"
+                        required
+                        class="mt-1 block w-full p-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700"
+                        >Type</label
+                      >
+                      <select
+                        name="type"
+                        class="mt-1 block w-full p-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none bg-white"
+                      >
+                        <option value="lecture">Lecture</option>
+                        <option value="lab">Laboratory</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2"
+                      >Required Expertise</label
+                    >
+                    <select
+                      name="expertise"
+                      class="mt-1 block w-full p-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none bg-white"
+                    >
+                      <!-- TUGMA SA DB: Inalis ang "/ IT" at ginawang "Math" lang -->
+                      <option value="Programming">Programming</option>
+                      <option value="Math">Math</option>
+                      <option value="General Science">General Science</option>
+                      <option value="Web Development">Web Development</option>
+                      <option value="Network Security">Network Security</option>
+                      <option value="Database Systems">Database Systems</option>
+                      <option value="Multimedia Arts">Multimedia Arts</option>
+                      <option value="Ethics & Philosophy">
+                        Ethics & Philosophy
+                      </option>
+                      <option value="Business Management">
+                        Business Management
+                      </option>
+                      <option value="Social Sciences">Social Sciences</option>
+                      <option value="Physical Education">
+                        Physical Education
+                      </option>
+                    </select>
+                  </div>
+                  <button
+                    type="submit"
+                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-indigo-100"
+                  >
+                    Save Subject
+                  </button>
+                </form>
+              </div>
+            </section>
+
+            <!-- Table Section -->
+            <section class="lg:col-span-2">
+              <div
+                class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden"
+              >
+                <table class="w-full text-left">
+                  <thead
+                    class="bg-gray-50 text-xs uppercase text-gray-500 font-semibold"
+                  >
+                    <tr>
+                      <th class="px-6 py-4">Subject</th>
+                      <th class="px-6 py-4">Units</th>
+                      <th class="px-6 py-4">Category</th>
+                      <th class="px-6 py-4 text-right">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody
+                    id="subjectsTableBody"
+                    class="divide-y divide-gray-100"
+                  ></tbody>
+                </table>
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Details Modal -->
+    <div
+      id="subjectModal"
+      class="modal opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center z-50"
+    >
+      <div
+        class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50 backdrop-blur-sm"
+      ></div>
+      <div
+        class="modal-container bg-white w-11/12 md:max-w-2xl mx-auto rounded-3xl shadow-2xl z-50 overflow-hidden"
+      >
+        <div class="flex justify-between items-center p-6 border-b">
+          <div class="flex items-center gap-3">
+            <div class="bg-indigo-100 p-2 rounded-lg text-indigo-600">
+              <i data-lucide="info" class="w-6 h-6"></i>
+            </div>
+            <h2 class="text-xl font-bold text-gray-800" id="modalSubjTitle">
+              Subject Details
+            </h2>
+          </div>
+          <button
+            onclick="toggleModal()"
+            class="text-gray-400 hover:text-gray-600 transition"
+          >
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div class="p-6">
+          <div id="modalBadges" class="flex flex-wrap gap-2 mb-6"></div>
+          <h3
+            class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4"
+          >
+            Potential Teachers
+          </h3>
+          <div
+            class="grid grid-cols-12 text-[10px] font-bold text-gray-400 uppercase px-4 mb-2"
+          >
+            <div class="col-span-5">Instructor Info</div>
+            <div class="col-span-4">Schedule</div>
+            <div class="col-span-3 text-right">Action</div>
+          </div>
+          <div
+            id="facultyList"
+            class="space-y-3 max-h-72 overflow-y-auto pr-1"
+          ></div>
+        </div>
+        <div class="bg-gray-50 p-4 flex justify-end">
+          <button
+            onclick="toggleModal()"
+            class="bg-indigo-600 text-white px-8 py-2.5 rounded-xl font-bold hover:bg-indigo-700 transition shadow-lg shadow-indigo-100"
+          >
+            Close Details
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      lucide.createIcons();
+      let allSubjects = [];
+
+      window.onload = fetchSubjects;
+
+      async function fetchSubjects() {
+        try {
+          const response = await fetch("get_subjects.php");
+          allSubjects = await response.json();
+          renderTable(allSubjects);
+        } catch (err) {
+          console.error("Fetch Error:", err);
+        }
+      }
+
+      function renderTable(subjects) {
+        const tbody = document.getElementById("subjectsTableBody");
+        tbody.innerHTML = "";
+        subjects.forEach((subj) => {
+          const typeClass =
+            subj.type === "lecture"
+              ? "bg-blue-100 text-blue-700"
+              : "bg-amber-100 text-amber-700";
+          tbody.innerHTML += `
+            <tr class="hover:bg-gray-50 transition border-b border-gray-100">
+              <td class="px-6 py-4">
+                <div class="font-bold text-gray-800">${subj.subj_code}</div>
+                <div class="text-[10px] text-gray-400 uppercase font-semibold">ID: #${subj.id} | Expertise: ${subj.expertise}</div>
+              </td>
+              <td class="px-6 py-4 text-gray-600 font-medium">${subj.units}</td>
+              <td class="px-6 py-4"><span class="px-2 py-1 ${typeClass} text-[10px] rounded-md font-bold uppercase">${subj.type}</span></td>
+              <td class="px-6 py-4 text-right flex justify-end gap-2">
+                <button onclick="viewDetails(${subj.id})" class="p-2 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 transition"><i data-lucide="eye" class="w-4 h-4"></i></button>
+                <button onclick="deleteSubject(${subj.id})" class="p-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+              </td>
+            </tr>`;
+        });
+        lucide.createIcons();
+      }
+
+      async function viewDetails(id) {
+        const subj = allSubjects.find((s) => s.id == id);
+        if (!subj) return;
+
+        document.getElementById("modalSubjTitle").innerText = subj.subj_code;
+        document.getElementById("modalBadges").innerHTML = `
+            <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-lg font-bold text-[11px] uppercase">${subj.type}</span>
+            <span class="px-3 py-1 bg-indigo-50 text-indigo-600 rounded-lg font-bold text-[11px] uppercase">${subj.units} Units</span>
+        `;
+
+        const facultyList = document.getElementById("facultyList");
+        facultyList.innerHTML =
+          '<p class="text-center py-6 text-gray-400 animate-pulse text-sm">Searching for matching experts...</p>';
+
+        try {
+          // Nagpapadala ng expertise sa PHP
+          const resp = await fetch(
+            `get_teachers_by_expertise.php?expertise=${encodeURIComponent(subj.expertise.trim())}`,
+          );
+          const teachers = await resp.json();
+
+          if (teachers.length > 0) {
+            facultyList.innerHTML = teachers
+              .map(
+                (t) => `
+                <div class="grid grid-cols-12 items-center gap-4 p-4 bg-white border border-gray-100 rounded-2xl hover:border-indigo-200 transition shadow-sm">
+                    <div class="col-span-5 flex items-center gap-3">
+                        <div class="w-10 h-10 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-xs">
+                            ${t.instructor_name.substring(0, 2).toUpperCase()}
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-gray-800">${t.instructor_name}</p>
+                            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-tight">${t.expertise}</p>
+                        </div>
+                    </div>
+                    <div class="col-span-4">
+                        <p class="text-[9px] text-gray-400 font-bold mb-1 uppercase">Availability</p>
+                        <div class="flex gap-1 mb-1">
+                            <span class="px-1.5 py-0.5 bg-indigo-50 text-indigo-600 rounded text-[9px] font-bold">${t.availability || "N/A"}</span>
+                        </div>
+                        <p class="text-[11px] font-semibold text-gray-700">${t.start_time ? t.start_time.substring(0, 5) : "00:00"} - ${t.end_time ? t.end_time.substring(0, 5) : "00:00"}</p>
+                    </div>
+                    <div class="col-span-3 text-right">
+                        <button onclick="assignTeacher(${t.teacher_id}, ${subj.id})" class="px-5 py-2 bg-indigo-50 text-indigo-600 rounded-xl text-xs font-bold hover:bg-indigo-600 hover:text-white transition uppercase">Assign</button>
+                    </div>
+                </div>
+            `,
+              )
+              .join("");
+          } else {
+            facultyList.innerHTML = `<div class="text-center p-10 bg-gray-50 rounded-2xl border border-dashed"><p class="text-gray-400 text-sm italic">No teachers found for "${subj.expertise}"</p></div>`;
+          }
+        } catch (e) {
+          facultyList.innerHTML =
+            '<p class="text-center py-6 text-red-400 text-sm">Error connecting to server.</p>';
+        }
+
+        toggleModal();
+        lucide.createIcons();
+      }
+
+      function toggleModal() {
+        const modal = document.getElementById("subjectModal");
+        modal.classList.toggle("opacity-0");
+        modal.classList.toggle("pointer-events-none");
+        document.body.classList.toggle("modal-active");
+      }
+
+      async function deleteSubject(id) {
+        if (confirm("Delete this subject?")) {
+          await fetch(`delete_subject.php?id=${id}`);
+          fetchSubjects();
+        }
+      }
+
+      async function assignTeacher(teacherId, subjectId) {
+        try {
+          const response = await fetch("assign_schedule.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            // Pass the teacher and subject IDs
+            body: `teacher_id=${teacherId}&subject_id=${subjectId}`,
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            // Matches the success output in image_4e2b07.png
+            alert("✅ Instructor assigned successfully!");
+            toggleModal(); // Close the "Details" modal
+
+            // Refresh your subjects table if you have a fetch function
+            if (typeof fetchSubjects === "function") fetchSubjects();
+          } else {
+            alert("Error: " + result.message);
+          }
+        } catch (error) {
+          console.error("Connection Error:", error);
+          alert("Critical Server Error. Check Console for details.");
+        }
+      }
+    </script>
+  </body>
+</html>

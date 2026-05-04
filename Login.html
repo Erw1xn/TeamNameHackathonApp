@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SchedSmart | Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "sched-primary": "#4F46E5",
+              "sched-sidebar": "#323491",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .mesh-bg {
+        background-color: #323491;
+        background-image:
+          radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 1) 0, transparent 50%),
+          radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 1) 0, transparent 50%),
+          radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 1) 0, transparent 50%);
+      }
+    </style>
+  </head>
+  <body class="mesh-bg min-h-screen flex items-center justify-center p-6">
+    <!-- max-w-lg matches the registration box width -->
+    <div class="w-full max-w-lg">
+      <div class="bg-white rounded-3xl shadow-2xl p-10">
+        <div class="mb-8">
+          <h2 class="text-2xl font-bold text-gray-800">Welcome Back</h2>
+          <p class="text-gray-500 text-sm">Please enter your faculty details</p>
+        </div>
+
+        <form action="Login.php" method="POST" class="space-y-5">
+          <div>
+            <label
+              class="block text-[10px] font-bold text-gray-400 uppercase mb-2 tracking-widest"
+              >Email Address</label
+            >
+            <input
+              type="email"
+              name="email"
+              required
+              placeholder="name@university.edu"
+              class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-sched-primary focus:outline-none transition"
+            />
+          </div>
+
+          <div>
+            <label
+              class="block text-[10px] font-bold text-gray-400 uppercase mb-2 tracking-widest"
+              >Password</label
+            >
+            <input
+              type="password"
+              name="password"
+              required
+              placeholder="••••••••"
+              class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-sched-primary focus:outline-none transition"
+            />
+          </div>
+
+          <button
+            type="submit"
+            class="w-full py-4 bg-sched-primary text-white rounded-xl font-bold text-sm shadow-lg hover:bg-indigo-700 transform hover:-translate-y-0.5 transition-all mt-4"
+          >
+            Log In
+          </button>
+        </form>
+
+        <div class="mt-8 text-center">
+          <p class="text-sm text-gray-500">
+            New to the faculty?
+            <a
+              href="Signup.html"
+              class="text-sched-primary font-bold hover:underline ml-1"
+              >Create Account</a
+            >
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

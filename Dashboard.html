@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - SchedSmart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+      .glass-card {
+        background: white;
+        border-radius: 2.5rem;
+        border: 1px solid #f1f5f9;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+      }
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+
+      .pill-container {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .pill-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        align-items: center;
+      }
+      .pill {
+        padding: 12px 4px;
+        border-radius: 1.25rem;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 55px;
+      }
+      .pill-room {
+        background: #ebf4ff;
+        color: #2b6cb0;
+      }
+      .pill-room span {
+        font-size: 8px;
+        opacity: 0.6;
+      }
+      .pill-teacher {
+        background: #f0fff4;
+        color: #2f855a;
+      }
+      .pill-subject {
+        background: #f0fff4;
+        color: #2f855a;
+        border: 1px solid #c6f6d5;
+      }
+      .pill-slot {
+        background: #f5f3ff;
+        color: #553c9a;
+        font-weight: 700;
+      }
+      .pill-slot span {
+        font-size: 9px;
+        margin-bottom: 2px;
+      }
+
+      .label-header {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        text-align: center;
+        font-size: 10px;
+        font-weight: 800;
+        color: #94a3b8;
+        margin-bottom: 12px;
+      }
+    </style>
+  </head>
+  <body class="bg-[#F8FAFC] text-slate-900">
+    <div class="flex min-h-screen">
+      <!-- SIDEBAR - Updated to match Management Pages structure -->
+      <aside
+        class="w-64 bg-indigo-900 text-white flex flex-col fixed h-full shadow-2xl"
+      >
+        <div
+          class="p-6 text-2xl font-bold border-b border-indigo-800 tracking-tight"
+        >
+          SchedSmart
+        </div>
+        <nav class="flex-grow p-4 space-y-2">
+          <!-- Active link style for Dashboard -->
+          <a
+            href="Dashboard.html"
+            class="flex items-center gap-3 p-3 bg-indigo-800 rounded-lg transition"
+          >
+            <i data-lucide="layout-grid" class="w-5 h-5"></i>
+            <span class="font-semibold">Dashboard</span>
+          </a>
+          <a
+            href="Rooms.html"
+            class="flex items-center gap-3 p-3 hover:bg-indigo-800 rounded-lg transition text-indigo-100"
+          >
+            <i data-lucide="door-open" class="w-5 h-5"></i>
+            <span class="font-semibold">Rooms</span>
+          </a>
+          <a
+            href="Teacher.html"
+            class="flex items-center gap-3 p-3 hover:bg-indigo-800 rounded-lg transition text-indigo-100"
+          >
+            <i data-lucide="users" class="w-5 h-5"></i>
+            <span class="font-semibold">Teachers</span>
+          </a>
+          <a
+            href="Subjects.html"
+            class="flex items-center gap-3 p-3 hover:bg-indigo-800 rounded-lg transition text-indigo-100"
+          >
+            <i data-lucide="book-open" class="w-5 h-5"></i>
+            <span class="font-semibold">Subjects</span>
+          </a>
+        </nav>
+      </aside>
+
+      <!-- MAIN CONTENT - Adjusted ml-64 to match new sidebar width -->
+      <main class="flex-1 ml-64 p-12">
+        <header class="mb-10">
+          <h1 class="text-5xl font-extrabold text-[#1E293B] tracking-tight">
+            Dashboard Overview
+          </h1>
+        </header>
+
+        <div class="grid grid-cols-12 gap-8">
+          <div class="col-span-8 space-y-8">
+            <div class="grid grid-cols-2 gap-8">
+              <!-- Rooms Available Card -->
+              <div class="glass-card p-8">
+                <div class="flex justify-between items-center mb-8">
+                  <h3
+                    class="font-extrabold text-slate-800 text-xl tracking-tight"
+                  >
+                    Rooms Available
+                  </h3>
+                  <button
+                    onclick="location.href = 'Rooms.html'"
+                    class="text-indigo-600 font-bold text-xs uppercase tracking-widest hover:underline"
+                  >
+                    View All
+                  </button>
+                </div>
+                <div
+                  id="available-rooms-list"
+                  class="space-y-4 text-center text-slate-400 py-4 italic"
+                >
+                  Loading rooms...
+                </div>
+              </div>
+
+              <!-- Weekly Overview Card -->
+              <div class="glass-card p-8">
+                <h3
+                  class="font-extrabold text-slate-800 text-xl tracking-tight mb-8"
+                >
+                  Weekly Overview
+                </h3>
+                <div class="label-header">
+                  <span>ROOM</span><span>INSTRUC.</span><span>SUBJ.</span
+                  ><span>SLOT</span>
+                </div>
+                <div id="weekly-overview-container" class="pill-container">
+                  <p class="text-slate-400 italic">No schedule data yet.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Active Timeline Table -->
+            <div class="glass-card overflow-hidden">
+              <div
+                class="px-8 py-6 flex justify-between items-center border-b border-slate-50"
+              >
+                <h3 class="font-extrabold text-slate-800 tracking-tight">
+                  Weekly Schedule
+                </h3>
+              </div>
+              <div class="px-8 pb-8">
+                <table class="w-full text-left">
+                  <thead
+                    class="text-[10px] uppercase text-slate-300 font-bold tracking-[0.2em]"
+                  >
+                    <tr>
+                      <th class="py-4">Day</th>
+                      <th class="py-4">Schedule Details</th>
+                      <th class="py-4">Teachers</th>
+                    </tr>
+                  </thead>
+                  <tbody id="timeline-body" class="text-xs">
+                    <tr>
+                      <td
+                        colspan="3"
+                        class="text-center py-20 text-slate-300 italic text-sm"
+                      >
+                        Waiting for data...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Resource Overview (Sidebar) -->
+          <div class="col-span-4">
+            <div class="glass-card p-8 h-full">
+              <h3
+                class="font-extrabold text-slate-800 text-2xl tracking-tight mb-10"
+              >
+                Resource Overview
+              </h3>
+              <div class="space-y-10">
+                <div>
+                  <div class="flex items-center gap-3 mb-6 text-slate-400">
+                    <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                    <h4
+                      class="text-[10px] font-bold uppercase tracking-[0.15em]"
+                    >
+                      Unassigned Rooms
+                    </h4>
+                  </div>
+                  <div
+                    id="unassigned-status-box"
+                    class="p-10 border-2 border-dashed border-slate-100 rounded-[2rem] text-center"
+                  >
+                    <p
+                      id="unassigned-text"
+                      class="text-sm font-semibold text-slate-300"
+                    >
+                      Calculating...
+                    </p>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex items-center gap-3 mb-6 text-slate-400">
+                    <i data-lucide="user-plus" class="w-4 h-4"></i>
+                    <h4
+                      class="text-[10px] font-bold uppercase tracking-[0.15em]"
+                    >
+                      Pending Assignments
+                    </h4>
+                  </div>
+                  <div id="pending-list" class="space-y-4"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      lucide.createIcons();
+
+      async function toggleAssignment(teacherId, roomId, buttonElement) {
+        const originalText = buttonElement.innerText;
+        buttonElement.innerText = "...";
+        buttonElement.disabled = true;
+
+        try {
+          const response = await fetch("assign_schedule.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: `teacher_id=${teacherId}&room_id=${roomId}`,
+          });
+
+          const result = await response.json();
+          if (result.success) {
+            loadDashboardData();
+          } else {
+            alert("Error: " + result.message);
+            buttonElement.innerText = originalText;
+          }
+        } catch (error) {
+          console.error("Communication Error:", error);
+          buttonElement.innerText = originalText;
+        } finally {
+          buttonElement.disabled = false;
+        }
+      }
+
+      async function loadDashboardData() {
+        try {
+          const response = await fetch("get_dashboard.php");
+          if (!response.ok) throw new Error("HTTP Error: " + response.status);
+          const data = await response.json();
+          if (!data.success) return;
+
+          // 1. Available Rooms
+          const roomList = document.getElementById("available-rooms-list");
+          roomList.innerHTML =
+            data.available_rooms.length > 0
+              ? data.available_rooms
+                  .map(
+                    (room) => `
+                <div class="flex items-center justify-between p-5 bg-[#F8FAFC] rounded-[1.5rem] border border-slate-50">
+                  <span class="font-extrabold text-slate-800">${room.room_name}</span>
+                  <span class="flex items-center gap-1.5 text-[9px] font-extrabold text-[#10B981]">
+                    <span class="w-1.5 h-1.5 bg-[#10B981] rounded-full"></span> AVAILABLE
+                  </span>
+                </div>`,
+                  )
+                  .join("")
+              : '<p class="text-slate-300 italic py-4">All rooms are currently busy.</p>';
+
+          // 2. Timeline Table
+          const timeline = document.getElementById("timeline-body");
+          timeline.innerHTML =
+            data.timeline.length > 0
+              ? data.timeline
+                  .map(
+                    (item) => `
+                <tr class="group border-b border-slate-50 last:border-0">
+                  <td class="py-8 font-extrabold text-slate-300 uppercase tracking-widest">${(item.day || "DAY").substring(0, 3)}</td>
+                  <td class="py-4">
+                    <div class="bg-[#EEF2FF] p-4 rounded-3xl border border-[#E0E7FF] min-w-[180px]">
+                      <p class="font-extrabold text-[#4F46E5] text-[11px] mb-1">Room ${item.room_name}</p>
+                      <p class="text-[9px] text-[#818CF8] font-semibold">${item.subject_display || "Scheduled"}</p>
+                    </div>
+                  </td>
+                  <td class="py-4">
+                    <div class="flex items-center gap-4">
+                      <div class="w-10 h-10 rounded-2xl bg-[#6366F1] flex items-center justify-center text-white font-extrabold text-[10px]">
+                        ${
+                          item.instructor_name
+                            ? item.instructor_name
+                                .split(" ")
+                                .map((n) => n[0])
+                                .join("")
+                            : "UN"
+                        }
+                      </div>
+                      <div>
+                        <p class="font-extrabold text-slate-800 text-[11px]">${item.instructor_name || "No Teacher"}</p>
+                        <p class="text-[9px] text-slate-400 font-bold italic">${item.start_time} - ${item.end_time}</p>
+                      </div>
+                    </div>
+                  </td>
+                </tr>`,
+                  )
+                  .join("")
+              : '<tr><td colspan="3" class="text-center py-20 text-slate-300 italic text-sm">No active assignments found.</td></tr>';
+
+          // 3. Weekly Overview
+          const weekly = document.getElementById("weekly-overview-container");
+          weekly.innerHTML =
+            data.timeline.length > 0
+              ? data.timeline
+                  .slice(0, 4)
+                  .map((item) => {
+                    const dayShort = (item.day || "WED")
+                      .substring(0, 3)
+                      .toUpperCase();
+                    const nameParts = item.instructor_name
+                      ? item.instructor_name.split(" ")
+                      : ["TBA"];
+                    const shortName =
+                      nameParts.length > 1
+                        ? `${nameParts[0][0]}. ${nameParts[nameParts.length - 1]}`
+                        : nameParts[0];
+                    return `
+                <div class="pill-row">
+                  <div class="pill pill-room"><p class="text-[10px] font-extrabold">${item.room_name || "N/A"}</p><span>ID: #${item.room_db_id || "0"}</span></div>
+                  <div class="pill pill-teacher"><p class="text-[10px] font-extrabold">${shortName}</p></div>
+                  <div class="pill pill-subject"><p class="text-[10px] font-extrabold">${item.subject_display}</p></div>
+                  <div class="pill pill-slot"><span>${dayShort}</span><p class="text-[10px]">${item.start_time.substring(0, 5)}-${item.end_time.substring(0, 5)}</p></div>
+                </div>`;
+                  })
+                  .join("")
+              : '<p class="text-slate-300 italic text-[10px]">Ready for scheduling.</p>';
+
+          // 4. Resource Counts
+          document.getElementById("unassigned-text").innerText =
+            data.unassigned_count > 0
+              ? `${data.unassigned_count} Unassigned Rooms`
+              : "All rooms assigned";
+
+          // 5. PENDING ASSIGNMENTS LOGIC
+          const pending = document.getElementById("pending-list");
+          const subResp = await fetch("get_subjects.php");
+          const subjects = await subResp.json();
+          pending.innerHTML = "";
+
+          if (subjects.length === 0) {
+            pending.innerHTML =
+              '<p class="text-[10px] text-slate-400 italic text-center">No pending subjects.</p>';
+          } else {
+            for (const sub of subjects) {
+              const expertResp = await fetch(
+                `get_teachers_by_expertise.php?expertise=${encodeURIComponent(sub.expertise)}`,
+              );
+              const teachers = await expertResp.json();
+
+              if (teachers.length === 0) continue;
+
+              const recommendedExpert = teachers[0].instructor_name;
+              const expertId = teachers[0].teacher_id;
+              const placeholderRoomId = 1;
+
+              pending.innerHTML += `
+                <div class="bg-[#F8FAFC] p-6 rounded-[2rem] border border-slate-50 shadow-sm">
+                  <div class="flex justify-between items-start mb-2">
+                    <span class="text-[9px] font-extrabold text-[#6366F1] bg-[#EEF2FF] px-3 py-1 rounded-lg uppercase">REGISTRY</span>
+                    <button onclick="toggleAssignment(${expertId}, ${placeholderRoomId}, this)" 
+                            class="bg-white border border-slate-200 text-slate-800 px-5 py-2 rounded-2xl text-[10px] font-extrabold hover:bg-[#6366F1] hover:text-white transition-all shadow-sm">
+                      Assign
+                    </button>
+                  </div>
+                  <h5 class="font-extrabold text-slate-800 text-lg leading-tight mb-1">${sub.subj_code}</h5>
+                  <p class="text-[10px] text-slate-500 font-bold mb-3">${sub.expertise}</p>
+                  <div class="flex items-center gap-2 mt-2 pt-3 border-t border-dashed border-slate-200">
+                    <div class="w-6 h-6 bg-indigo-600 text-white rounded-full flex items-center justify-center text-[8px] font-extrabold">
+                      ${recommendedExpert.substring(0, 2).toUpperCase()}
+                    </div>
+                    <span class="text-[10px] font-bold text-slate-600">${recommendedExpert}</span>
+                  </div>
+                </div>`;
+            }
+          }
+        } catch (e) {
+          console.error("Dashboard Error:", e);
+        }
+      }
+      window.onload = loadDashboardData;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,235 @@
+// Group Name: Syntax Error
+// BSIT - 304 HACKATON_APP
+
+// Members:
+// Jacaba, Erwin 
+// Juntila Romeo
+// Amican, Angelo Karl
+// Salisali, Christian
+
+// Instruction of Flow of the System
+
+
+// ------------------------------------------------------------
+// SECTION 1: AUTHENTICATION FLOW
+// ------------------------------------------------------------
+
+// STEP 1 — LOGIN PAGE (login.html)
+//   - User lands on the Login page by default.
+//   - Fields required:
+//       • Email Address  (placeholder: name@university.edu)
+//       • Password       (placeholder: ••••••••)
+//   - Button: "Log In"
+//   - Link: "New to the faculty? Create Account" → redirects to Register page.
+//   - On successful login:
+//       • Check submitted credentials against stored accounts in the database/localStorage.
+//       • If credentials MATCH → redirect user to Dashboard (Dashboard.html).
+//       • If credentials DO NOT MATCH → show error message (e.g., "Invalid email or password.").
+
+// STEP 2 — REGISTRATION PAGE (register.html / signup.html)
+//   - Accessed via the "Create Account" link on the Login page.
+//   - Fields required:
+//       • First Name
+//       • Last Name
+//       • Email Address  (placeholder: name@university.edu)
+//       • Password       (min. 8 characters)
+//       • Confirm Password
+//       • Checkbox: "I agree to the Terms of Service and Privacy Policy."
+//   - Button: "Create Account"
+//   - Link: "Already have an account? Log In" → redirects back to Login page.
+//   - On successful registration:
+//       • Validate all fields (passwords match, email format, checkbox checked).
+//       • Save new account to database/localStorage.
+//       • Redirect user to Login page (or auto-login and go to Dashboard).
+
+
+// ------------------------------------------------------------
+// SECTION 2: DASHBOARD PAGE (Dashboard.html)
+// ------------------------------------------------------------
+
+// Accessible only when the user is logged in (auth guard required).
+// Sidebar Navigation:
+//   • Dashboard  (active/current)
+//   • Rooms
+//   • Teachers
+//   • Subjects
+
+// WIDGET 1 — Rooms Available
+//   - Displays rooms that currently have NO assigned teachers/subjects.
+//   - Shows room name and status badge (e.g., "● AVAILABLE").
+//   - "VIEW ALL" link → navigates to Rooms page.
+
+// WIDGET 2 — Weekly Overview (table format)
+//   - Columns: ROOM | INSTRUCTOR | SUBJECT | SLOT (day + time)
+//   - Shows all currently assigned schedules for the week at a glance.
+//   - Data is pulled from completed assignments (room ↔ teacher ↔ subject).
+
+// WIDGET 3 — Resource Overview
+//   - UNASSIGNED ROOMS — count of rooms with no teacher/subject assigned yet.
+//   - PENDING ASSIGNMENTS — list of subjects that still need a teacher assigned.
+//       • Each pending item shows: Subject name, subject type (e.g., REGISTRY badge),
+//         matched teacher name, and an "Assign" button to complete the assignment.
+
+
+// ------------------------------------------------------------
+// SECTION 3: ROOM MANAGEMENT PAGE (Rooms.html)
+// ------------------------------------------------------------
+
+// LEFT PANEL — Add New Room Form
+//   Fields:
+//       • Room Name         (e.g., Lab 101)
+//       • Max Capacity      (number, e.g., 40)
+//       • Start Time        (time picker)
+//       • End Time          (time picker)
+//       • Capabilities (checkboxes):
+//           ☐ Air Conditioned
+//           ☐ Projector Available
+//           ☐ Computer/Science Lab
+//   - Button: "Register Room" → saves room to the system.
+
+// RIGHT PANEL — Existing Rooms Table
+//   - Columns: ROOM INFO (name + ID) | CAPACITY | EQUIPMENT tags | STATUS | ACTION
+//   - Equipment tags displayed as colored badges (e.g., PRJ = Projector, LAB = Lab, AC = Air Conditioned).
+//   - Status: "● AVAILABLE" in green when no conflicts.
+//   - ACTION: Eye icon (👁) → opens Room Details modal.
+
+// ROOM DETAILS MODAL (triggered by eye icon)
+//   - Displays:
+//       • Room Name + ID
+//       • Capacity (# Seats)
+//       • Status (Available / Occupied)
+//       • Available Hours (e.g., 10:30 – 13:30)
+//       • Equipment & Features (badge tags)
+//       • Day Availability (e.g., Mon, Tue)
+//       • Potential Teachers section (table):
+//           - INSTRUCTOR INFO (avatar + name + expertise)
+//           - SCHEDULE INFO (availability days + time slot)
+//           - ACTION: "ASSIGN" button
+//               → Clicking ASSIGN links that teacher to this room.
+//               → Updates the Weekly Overview on the Dashboard.
+//   - Button: "Close Details" → closes the modal.
+
+
+// ------------------------------------------------------------
+// SECTION 4: TEACHER MANAGEMENT PAGE (Teacher.html)
+// ------------------------------------------------------------
+
+// TOP PANEL — Add Teacher Form (MANUAL METHOD)
+//   Fields:
+//       • Instructor Name   (e.g., John Doe)
+//       • ID Number         (e.g., 2024-0001)
+//       • Expertise         (dropdown: Programming / Math / Science / etc.)
+//       • Select Days Available (checkboxes):
+//           ☐ Mon  ☐ Tue  ☐ Wed  ☐ Thu  ☐ Fri  ☐ Sat
+//       • Daily Shift Hours (time range picker: from → to)
+//   - Button: "Add Teacher" → saves teacher manually to the system.
+
+// AI / PDF IMPORT METHOD
+//   - Button: "Import PDF"
+//       → User uploads a PDF file containing teacher schedule data.
+//       → System uses AI to parse the PDF and auto-extract:
+//             name, ID number, expertise, available days, and time slots.
+//       → Extracted data is automatically added to the Existing Teachers list
+//         without manual entry.
+//   - PDF Format expected:
+//       Instructor Name | ID Number | Expertise | Days Available | Time Slot
+//       (The AI parser should be flexible enough to handle structured schedule PDFs.)
+
+// BOTTOM PANEL — Existing Teachers Table
+//   - Columns: TEACHER ID | INSTRUCTOR NAME | ID NUMBER | EXPERTISE | AVAILABILITY | TIME SLOT
+//   - Each row represents one registered teacher.
+//   - Availability is shown as colored day badges (e.g., MON, TUE, WEDNESDAY).
+//   - Search bar to filter teachers by name or expertise.
+
+
+// ------------------------------------------------------------
+// SECTION 5: SUBJECT MANAGEMENT PAGE (Subjects.html)
+// ------------------------------------------------------------
+
+// LEFT PANEL — New Subject Form
+//   Fields:
+//       • Subject Code & Title  (e.g., CS101 - Intro to Programming)
+//       • Units                 (number, e.g., 3)
+//       • Type                  (dropdown: Lecture / Lab / etc.)
+//       • Required Expertise    (dropdown: Programming / Math / etc.)
+//   - Button: "Save Subject" → saves subject to the system.
+
+// RIGHT PANEL — Existing Subjects Table
+//   - Columns: SUBJECT (name + ID + expertise tag) | UNITS | CATEGORY badge | ACTION
+//   - Category shown as colored badge (e.g., LAB in yellow/orange).
+//   - ACTION:
+//       • Eye icon (👁) → opens Subject Details modal.
+//       • Trash icon (🗑) → deletes the subject.
+
+// SUBJECT DETAILS MODAL (triggered by eye icon)
+//   - Displays:
+//       • Subject name
+//       • Category badge (e.g., LAB) + Units badge (e.g., 20 UNITS)
+//       • POTENTIAL TEACHERS section (auto-matched by expertise):
+//           - System compares Required Expertise of the subject
+//             against the Expertise field of registered teachers.
+//           - Only teachers whose expertise MATCHES are shown here.
+//           - Columns: INSTRUCTOR INFO (avatar + name + expertise) | SCHEDULE (days + time) | ACTION
+//           - ACTION: "ASSIGN" button
+//               → Clicking ASSIGN links that teacher to this subject.
+//               → Shows confirmation dialog: "Instructor assigned successfully!"
+//               → Updates the Dashboard Pending Assignments widget.
+//   - Button: "Close Details" → closes modal.
+
+
+// ------------------------------------------------------------
+// SECTION 6: SYSTEM MATCHING LOGIC SUMMARY
+// ------------------------------------------------------------
+
+// ROOM ↔ TEACHER MATCHING:
+//   - When viewing Room Details, the system shows teachers whose
+//     available days and time slots OVERLAP with the room's available hours.
+//   - Admin can click ASSIGN to link a teacher to a room.
+
+// SUBJECT ↔ TEACHER MATCHING:
+//   - When viewing Subject Details, the system automatically filters
+//     teachers by their EXPERTISE field matching the subject's Required Expertise.
+//   - Admin can click ASSIGN to link a teacher to a subject.
+
+// FULL ASSIGNMENT FLOW (end-to-end):
+//   1. Register Rooms (with capabilities, hours, days).
+//   2. Register Teachers (manually or via PDF import).
+//   3. Create Subjects (with required expertise and units).
+//   4. Assign Teachers to Rooms (via Room Details → Assign).
+//   5. Assign Teachers to Subjects (via Subject Details → Assign).
+//   6. Dashboard updates automatically:
+//       - Weekly Overview shows: Room | Teacher | Subject | Day + Time Slot.
+//       - Unassigned Rooms count decreases as assignments are made.
+//       - Pending Assignments list clears as subjects get teachers.
+
+
+// ------------------------------------------------------------
+// SECTION 7: GENERAL SYSTEM NOTES
+// ------------------------------------------------------------
+
+// AUTH GUARD:
+//   - All pages except Login and Register should be protected.
+//   - If a user is not logged in and tries to access Dashboard, Rooms,
+//     Teachers, or Subjects → redirect them back to Login page.
+
+// DATA PERSISTENCE:
+//   - Use a backend database (MySQL / Firebase / Supabase) or
+//     localStorage for storing: users, rooms, teachers, subjects, assignments.
+
+// NAVIGATION:
+//   - Sidebar is present on all authenticated pages.
+//   - Active page is highlighted in the sidebar.
+//   - App name "SchedSmart" displayed at the top of the sidebar.
+
+// SEARCH:
+//   - Rooms page: search bar filters the Existing Rooms table.
+//   - Teachers page: search bar filters the Existing Teachers table.
+
+// NOTIFICATIONS / ALERTS:
+//   - Successful assignment shows browser alert or toast:
+//     "Instructor assigned successfully!"
+//   - Form validation errors should display inline messages.
+
+// ============================================================
+// END OF SCHEDSMART SYSTEM INSTRUCTIONS
+// ============================================================

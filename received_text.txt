@@ -1,0 +1,2 @@
+TEXT RECEIVED:
+Name:   Dr. Alice Smith  ID:   2024-0001  Expertise:   Computer Science  Availability:   Monday, Wednesday, Friday

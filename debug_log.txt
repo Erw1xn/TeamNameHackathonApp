@@ -1,0 +1,48 @@
+--- NEW IMPORT ATTEMPT ---
+--- STARTING DEEP TRACE ---
+DATABASE CONNECTED SUCCESSFULLY 
+AI RESPONDED
+--- STARTING DEEP TRACE ---
+DATABASE CONNECTED SUCCESSFULLY
+AI RESPONDED
+PARSING ERROR: The JSON array was empty or invalid.
+FINAL PARSING ERROR: AI response did not contain a valid JSON array.
+FINAL PARSING ERROR: AI response did not contain a valid JSON array.
+API ERROR: models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+API ERROR: models/gemini-3-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+AI RAW DATA: [
+  {
+    "name": "Juan Dela Cruz",
+    "emp_id": "2024-0051",
+    "is_it": 1,
+    "is_math": 0
+  }
+]
+DB SUCCESS: Added Juan Dela Cruz
+AI RAW DATA: [
+  {
+    "name": "Juan Dela Cruz",
+    "emp_id": "2024-0051",
+    "is_it": 1,
+    "is_math": 0
+  }
+]
+AI RAW DATA: [
+  {
+    "name": "Jacaba, Erwin Tulfo",
+    "emp_id": "2024-0051",
+    "is_it": 1,
+    "is_math": 0
+  }
+]
+AI RAW DATA: [
+  {
+    "name": "Jacaba, Erwin Tulfo",
+    "emp_id": "2024-0052",
+    "is_it": 1,
+    "is_math": 0
+  }
+]
+DB SUCCESS: Added Jacaba, Erwin Tulfo
+AI Error: Could not find any teachers in the text provided.
+AI Error: Could not find any teachers in the text provided.

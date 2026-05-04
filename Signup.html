@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SchedSmart | Register</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "sched-primary": "#4F46E5",
+              "sched-sidebar": "#323491",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .mesh-bg {
+        background-color: #323491;
+        background-image:
+          radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 1) 0, transparent 50%),
+          radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 1) 0, transparent 50%),
+          radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 1) 0, transparent 50%);
+      }
+    </style>
+  </head>
+  <body class="mesh-bg min-h-screen flex items-center justify-center p-6">
+    <div class="w-full max-w-lg">
+      <div class="bg-white rounded-3xl shadow-2xl p-10">
+        <div class="mb-8">
+          <h2 class="text-2xl font-bold text-gray-800">
+            SchedSmart Registration
+          </h2>
+        </div>
+
+        <form action="Signup.php" method="POST" class="space-y-5">
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label
+                class="block text-[10px] font-bold text-gray-400 uppercase mb-2 tracking-widest"
+                >First Name</label
+              >
+              <input
+                type="text"
+                name="first_name"
+                required
+                class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-sched-primary focus:outline-none transition"
+              />
+            </div>
+            <div>
+              <label
+                class="block text-[10px] font-bold text-gray-400 uppercase mb-2 tracking-widest"
+                >Last Name</label
+              >
+              <input
+                type="text"
+                name="last_name"
+                required
+                class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-sched-primary focus:outline-none transition"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label
+              class="block text-[10px] font-bold text-gray-400 uppercase mb-2 tracking-widest"
+              >Email Address</label
+            >
+            <input
+              type="email"
+              name="email"
+              placeholder="name@university.edu"
+              required
+              class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-sched-primary focus:outline-none transition"
+            />
+          </div>
+
+          <div>
+            <label
+              class="block text-[10px] font-bold text-gray-400 uppercase mb-2 tracking-widest"
+              >Password</label
+            >
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Min. 8 characters"
+              required
+              class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-sched-primary focus:outline-none transition"
+            />
+          </div>
+
+          <div>
+            <label
+              class="block text-[10px] font-bold text-gray-400 uppercase mb-2 tracking-widest"
+              >Confirm Password</label
+            >
+            <input
+              type="password"
+              id="confirm_password"
+              name="confirm_password"
+              placeholder="Repeat your password"
+              required
+              class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-sched-primary focus:outline-none transition"
+            />
+            <p id="msg" class="text-[10px] mt-1 font-bold"></p>
+          </div>
+
+          <div class="flex items-start">
+            <input
+              type="checkbox"
+              id="terms"
+              name="terms"
+              required
+              class="mt-1 w-4 h-4 text-sched-primary border-gray-300 rounded focus:ring-sched-primary"
+            />
+            <label
+              for="terms"
+              class="ml-2 text-xs font-semibold text-gray-600 leading-snug"
+            >
+              I agree to the
+              <a href="#" class="text-sched-primary hover:underline"
+                >Terms of Service</a
+              >
+              and
+              <a href="#" class="text-sched-primary hover:underline"
+                >Privacy Policy</a
+              >.
+            </label>
+          </div>
+
+          <button
+            type="submit"
+            class="w-full py-4 bg-sched-primary text-white rounded-xl font-bold text-sm shadow-lg hover:bg-indigo-700 transform hover:-translate-y-0.5 transition-all mt-4"
+          >
+            Create Account
+          </button>
+        </form>
+
+        <div class="mt-8 text-center">
+          <p class="text-sm text-gray-500">
+            Already have an account?
+            <a
+              href="Login.html"
+              class="text-sched-primary font-bold hover:underline ml-1"
+              >Log In</a
+            >
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const pw = document.getElementById("password");
+      const cpw = document.getElementById("confirm_password");
+      const msg = document.getElementById("msg");
+
+      cpw.onkeyup = function () {
+        if (pw.value === cpw.value) {
+          msg.style.color = "green";
+          msg.innerHTML = "✓ Passwords match";
+        } else {
+          msg.style.color = "red";
+          msg.innerHTML = "✗ Passwords do not match";
+        }
+      };
+    </script>
+  </body>
+</html>

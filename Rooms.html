@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Room Management - SchedSmart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+      .form-scrollbar::-webkit-scrollbar {
+        width: 5px;
+      }
+      .form-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .form-scrollbar::-webkit-scrollbar-thumb {
+        background: #e2e8f0;
+        border-radius: 10px;
+      }
+      .form-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #cbd5e1;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 font-sans">
+    <!-- VIEW ROOM MODAL -->
+    <div
+      id="viewModal"
+      class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white rounded-3xl shadow-2xl max-w-lg w-full overflow-hidden transform transition-all flex flex-col max-h-[90vh]"
+      >
+        <div
+          class="p-6 border-b border-gray-100 flex justify-between items-center bg-indigo-50 shrink-0"
+        >
+          <h3 class="text-xl font-bold text-indigo-900 flex items-center gap-2">
+            <i data-lucide="info"></i> Room Details
+          </h3>
+          <button
+            onclick="closeRoomModal()"
+            class="p-2 hover:bg-white rounded-full transition text-gray-500"
+          >
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div class="p-6 space-y-6 overflow-y-auto form-scrollbar">
+          <div class="flex justify-between items-start">
+            <div>
+              <p
+                class="text-[10px] font-bold text-gray-400 uppercase tracking-widest"
+              >
+                Room Name
+              </p>
+              <h4
+                id="modalRoomName"
+                class="text-2xl font-extrabold text-gray-800"
+              >
+                ---
+              </h4>
+            </div>
+            <span
+              id="modalID"
+              class="bg-gray-100 text-gray-500 px-3 py-1 rounded-lg text-xs font-mono font-bold"
+              >ID: #0</span
+            >
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="bg-gray-50 p-4 rounded-2xl">
+              <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">
+                Capacity
+              </p>
+              <p id="modalCapacity" class="text-lg font-bold text-gray-700">
+                0 Seats
+              </p>
+            </div>
+            <div class="bg-gray-50 p-4 rounded-2xl">
+              <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">
+                Status
+              </p>
+              <p
+                class="text-emerald-600 font-bold flex items-center gap-1 text-sm"
+              >
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                Available
+              </p>
+            </div>
+          </div>
+          <div class="bg-indigo-50/50 p-4 rounded-2xl border border-indigo-100">
+            <p
+              class="text-[10px] font-bold text-indigo-400 uppercase mb-1 tracking-widest"
+            >
+              Available Hours
+            </p>
+            <p id="modalTimeRange" class="text-lg font-bold text-indigo-900">
+              --:-- - --:--
+            </p>
+          </div>
+          <div>
+            <p
+              class="text-[10px] font-bold text-gray-400 uppercase mb-3 tracking-widest"
+            >
+              Equipment & Features
+            </p>
+            <div id="modalEquipment" class="flex flex-wrap gap-2"></div>
+          </div>
+          <div>
+            <p
+              class="text-[10px] font-bold text-gray-400 uppercase mb-3 tracking-widest"
+            >
+              Day Availability
+            </p>
+            <div id="modalAvailability" class="flex flex-wrap gap-2"></div>
+          </div>
+          <div class="pt-4 border-t border-gray-100">
+            <p
+              class="text-[10px] font-bold text-gray-400 uppercase mb-3 tracking-widest"
+            >
+              Potential Teachers
+            </p>
+            <div class="overflow-hidden border border-gray-100 rounded-xl">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-gray-50 text-gray-500 font-bold">
+                  <tr>
+                    <th class="px-4 py-2">Instructor Info</th>
+                    <th class="px-4 py-2">Schedule Info</th>
+                    <th class="px-4 py-2 text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody
+                  id="potentialTeachersList"
+                  class="divide-y divide-gray-50"
+                ></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="p-4 bg-gray-50 text-right shrink-0">
+          <button
+            onclick="closeRoomModal()"
+            class="px-6 py-2.5 bg-indigo-600 text-white rounded-xl font-bold text-sm shadow-md hover:bg-indigo-700 transition"
+          >
+            Close Details
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex min-h-screen">
+      <!-- SIDEBAR -->
+      <aside class="w-64 bg-indigo-900 text-white flex flex-col fixed h-full">
+        <div
+          class="p-6 text-2xl font-bold border-b border-indigo-800 tracking-tight"
+        >
+          SchedSmart
+        </div>
+        <nav class="flex-grow p-4 space-y-2">
+          <a
+            href="Dashboard.html"
+            class="flex items-center gap-3 p-3 hover:bg-indigo-800 rounded-lg transition"
+            ><i data-lucide="layout-dashboard"></i> Dashboard</a
+          >
+          <a
+            href="Rooms.html"
+            class="flex items-center gap-3 p-3 bg-indigo-800 rounded-lg transition"
+            ><i data-lucide="door-open"></i> Rooms</a
+          >
+          <a
+            href="Teacher.html"
+            class="flex items-center gap-3 p-3 hover:bg-indigo-800 rounded-lg transition"
+            ><i data-lucide="users"></i> Teachers</a
+          >
+          <a
+            href="Subjects.html"
+            class="flex items-center gap-3 p-3 hover:bg-indigo-800 rounded-lg transition"
+            ><i data-lucide="book-open"></i> Subjects</a
+          >
+        </nav>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main class="flex-1 ml-64 p-8">
+        <div class="max-w-6xl mx-auto">
+          <header class="mb-8 flex justify-between items-center">
+            <div>
+              <h1 class="text-3xl font-bold text-gray-900">Room Management</h1>
+              <p class="text-gray-500">
+                Add and configure classrooms for auto-matching.
+              </p>
+            </div>
+          </header>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+            <!-- FORM SECTION -->
+            <section class="lg:col-span-1 sticky top-8">
+              <div
+                class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden flex flex-col max-h-[calc(100vh-100px)]"
+              >
+                <div class="p-6 border-b border-gray-50">
+                  <h2 class="text-lg font-semibold flex items-center gap-2">
+                    <i data-lucide="plus-circle" class="text-indigo-600"></i>
+                    Add New Room
+                  </h2>
+                </div>
+                <form id="roomForm" class="flex flex-col overflow-hidden">
+                  <div class="p-6 space-y-4 overflow-y-auto form-scrollbar">
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700"
+                        >Room Name</label
+                      >
+                      <input
+                        type="text"
+                        name="room_name"
+                        placeholder="e.g. Lab 101"
+                        required
+                        class="mt-1 block w-full p-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700"
+                        >Max Capacity</label
+                      >
+                      <input
+                        type="number"
+                        name="capacity"
+                        placeholder="40"
+                        required
+                        class="mt-1 block w-full p-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
+                      />
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                      <div>
+                        <label class="block text-sm font-medium text-gray-700"
+                          >Start Time</label
+                        >
+                        <input
+                          type="time"
+                          name="start_time"
+                          required
+                          class="mt-1 block w-full p-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label class="block text-sm font-medium text-gray-700"
+                          >End Time</label
+                        >
+                        <input
+                          type="time"
+                          name="end_time"
+                          required
+                          class="mt-1 block w-full p-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label
+                        class="block text-sm font-medium text-gray-700 mb-2"
+                        >Capabilities</label
+                      >
+                      <div class="space-y-2 text-sm text-gray-600">
+                        <label
+                          class="flex items-center gap-2 cursor-pointer bg-gray-50 p-2 rounded-lg hover:bg-gray-100"
+                        >
+                          <input
+                            type="checkbox"
+                            name="has_ac"
+                            class="w-4 h-4 text-indigo-600"
+                          />
+                          <span>Air Conditioned</span>
+                        </label>
+                        <label
+                          class="flex items-center gap-2 cursor-pointer bg-gray-50 p-2 rounded-lg hover:bg-gray-100"
+                        >
+                          <input
+                            type="checkbox"
+                            name="has_projector"
+                            class="w-4 h-4 text-indigo-600"
+                          />
+                          <span>Projector Available</span>
+                        </label>
+                        <label
+                          class="flex items-center gap-2 cursor-pointer bg-gray-50 p-2 rounded-lg hover:bg-gray-100"
+                        >
+                          <input
+                            type="checkbox"
+                            name="is_lab"
+                            class="w-4 h-4 text-indigo-600"
+                          />
+                          <span>Computer/Science Lab</span>
+                        </label>
+                      </div>
+                    </div>
+                    <div>
+                      <label
+                        class="block text-sm font-medium text-gray-700 mb-2"
+                        >Day Availability</label
+                      >
+                      <div class="space-y-2 text-sm text-gray-600">
+                        <label
+                          class="flex items-center gap-2 cursor-pointer bg-gray-50 p-2 rounded-lg hover:bg-gray-100"
+                          ><input
+                            type="checkbox"
+                            name="day_mon"
+                            class="w-4 h-4 text-indigo-600"
+                          />
+                          <span>Monday</span></label
+                        >
+                        <label
+                          class="flex items-center gap-2 cursor-pointer bg-gray-50 p-2 rounded-lg hover:bg-gray-100"
+                          ><input
+                            type="checkbox"
+                            name="day_tue"
+                            class="w-4 h-4 text-indigo-600"
+                          />
+                          <span>Tuesday</span></label
+                        >
+                        <label
+                          class="flex items-center gap-2 cursor-pointer bg-gray-50 p-2 rounded-lg hover:bg-gray-100"
+                          ><input
+                            type="checkbox"
+                            name="day_wed"
+                            class="w-4 h-4 text-indigo-600"
+                          />
+                          <span>Wednesday</span></label
+                        >
+                        <label
+                          class="flex items-center gap-2 cursor-pointer bg-gray-50 p-2 rounded-lg hover:bg-gray-100"
+                          ><input
+                            type="checkbox"
+                            name="day_thu"
+                            class="w-4 h-4 text-indigo-600"
+                          />
+                          <span>Thursday</span></label
+                        >
+                        <label
+                          class="flex items-center gap-2 cursor-pointer bg-gray-50 p-2 rounded-lg hover:bg-gray-100"
+                          ><input
+                            type="checkbox"
+                            name="day_fri"
+                            class="w-4 h-4 text-indigo-600"
+                          />
+                          <span>Friday</span></label
+                        >
+                        <label
+                          class="flex items-center gap-2 cursor-pointer bg-gray-50 p-2 rounded-lg hover:bg-gray-100"
+                          ><input
+                            type="checkbox"
+                            name="day_sat"
+                            class="w-4 h-4 text-indigo-600"
+                          />
+                          <span>Saturday</span></label
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <div class="p-6 border-t border-gray-50 bg-white">
+                    <button
+                      type="submit"
+                      class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-indigo-100"
+                    >
+                      Register Room
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </section>
+
+            <!-- TABLE SECTION -->
+            <section class="lg:col-span-2">
+              <div
+                class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden"
+              >
+                <div
+                  class="p-4 bg-gray-50 border-b border-gray-200 flex justify-between items-center"
+                >
+                  <h2 class="font-semibold">Existing Rooms</h2>
+                  <input
+                    type="text"
+                    id="tableSearch"
+                    placeholder="Search rooms..."
+                    class="text-sm border border-gray-300 rounded-lg px-3 py-1 outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+                <div class="overflow-x-auto">
+                  <table class="w-full text-left">
+                    <thead
+                      class="bg-gray-50 text-xs uppercase text-gray-500 font-semibold"
+                    >
+                      <tr>
+                        <th class="px-6 py-4">Room Info</th>
+                        <th class="px-6 py-4">Capacity</th>
+                        <th class="px-6 py-4">Equipment</th>
+                        <th class="px-6 py-4">Status</th>
+                        <th class="px-6 py-4 text-center">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="roomTableBody" class="divide-y divide-gray-100">
+                      <!-- Content loaded via JS -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      lucide.createIcons();
+
+      // Handle Form Submission
+      document
+        .getElementById("roomForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault(); // Stop page reload
+
+          const formData = new FormData(this);
+
+          try {
+            const response = await fetch("Rooms.php", {
+              method: "POST",
+              body: formData,
+            });
+
+            if (response.ok) {
+              alert("✅ Room registered successfully!");
+              this.reset(); // Clear the form
+              fetchRooms(); // Refresh the table to show Lab 03
+            } else {
+              const errorText = await response.text();
+              alert("❌ Error: " + errorText);
+            }
+          } catch (err) {
+            console.error("Submission error:", err);
+            alert("Connection error occurred.");
+          }
+        });
+
+      // Load rooms from database
+      async function fetchRooms() {
+        try {
+          const response = await fetch("get_rooms.php");
+          const rooms = await response.json();
+          const tbody = document.getElementById("roomTableBody");
+          tbody.innerHTML = "";
+
+          if (rooms.length === 0) {
+            tbody.innerHTML =
+              '<tr><td colspan="5" class="px-6 py-10 text-center text-gray-400 italic">No rooms found</td></tr>';
+            return;
+          }
+
+          rooms.forEach((room) => {
+            const roomData = JSON.stringify(room).replace(/"/g, "&quot;");
+            tbody.innerHTML += `
+                <tr class="hover:bg-gray-50 transition border-b border-gray-100">
+                    <td class="px-6 py-4">
+                        <div class="font-bold text-gray-800">${room.room_name}</div>
+                        <div class="text-[10px] text-gray-400 uppercase font-semibold">ID: #${room.id}</div>
+                    </td>
+                    <td class="px-6 py-4 text-gray-600 font-medium">${room.capacity}</td>
+                    <td class="px-6 py-4">
+                        <div class="flex gap-1 flex-wrap">
+                            ${room.has_ac == 1 ? '<span class="px-2 py-0.5 bg-blue-100 text-blue-700 text-[10px] rounded-full font-bold">AC</span>' : ""}
+                            ${room.has_projector == 1 ? '<span class="px-2 py-0.5 bg-purple-100 text-purple-700 text-[10px] rounded-full font-bold">PRJ</span>' : ""}
+                            ${room.is_lab == 1 ? '<span class="px-2 py-0.5 bg-amber-100 text-amber-700 text-[10px] rounded-full font-bold">LAB</span>' : ""}
+                        </div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="flex items-center gap-1.5 text-emerald-600 text-xs font-bold uppercase tracking-wider">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Available
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-center">
+                        <button onclick="openRoomModal(${roomData})" class="p-2 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-600 hover:text-white transition shadow-sm">
+                            <i data-lucide="eye" class="w-4 h-4"></i>
+                        </button>
+                    </td>
+                </tr>`;
+          });
+          lucide.createIcons();
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      // Modal functions
+      async function openRoomModal(room) {
+        const modal = document.getElementById("viewModal");
+        document.getElementById("modalRoomName").innerText = room.room_name;
+        document.getElementById("modalID").innerText = `ID: #${room.id}`;
+        document.getElementById("modalCapacity").innerText =
+          `${room.capacity} Seats`;
+
+        const start = room.start_time
+          ? room.start_time.substring(0, 5)
+          : "--:--";
+        const end = room.end_time ? room.end_time.substring(0, 5) : "--:--";
+        document.getElementById("modalTimeRange").innerText =
+          `${start} - ${end}`;
+
+        // Set Equipment
+        const equipContainer = document.getElementById("modalEquipment");
+        equipContainer.innerHTML = "";
+        if (room.has_ac == 1)
+          equipContainer.innerHTML += `<span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-xl text-xs font-bold border border-blue-100">Air Conditioned</span>`;
+        if (room.has_projector == 1)
+          equipContainer.innerHTML += `<span class="px-3 py-1 bg-purple-50 text-purple-600 rounded-xl text-xs font-bold border border-purple-100">Projector Available</span>`;
+        if (room.is_lab == 1)
+          equipContainer.innerHTML += `<span class="px-3 py-1 bg-amber-50 text-amber-600 rounded-xl text-xs font-bold border border-amber-100">Lab</span>`;
+
+        // Set Days for Room
+        const availContainer = document.getElementById("modalAvailability");
+        availContainer.innerHTML = "";
+        const days = [
+          { k: "day_mon", l: "Mon" },
+          { k: "day_tue", l: "Tue" },
+          { k: "day_wed", l: "Wed" },
+          { k: "day_thu", l: "Thu" },
+          { k: "day_fri", l: "Fri" },
+          { k: "day_sat", l: "Sat" },
+        ];
+        days.forEach((d) => {
+          if (room[d.k] == 1)
+            availContainer.innerHTML += `<span class="px-3 py-1 bg-emerald-50 text-emerald-600 rounded-xl text-xs font-bold border border-emerald-100">${d.l}</span>`;
+        });
+
+        // --- UPDATED TEACHER LIST LOGIC ---
+        const teacherList = document.getElementById("potentialTeachersList");
+        teacherList.innerHTML =
+          '<tr><td colspan="3" class="px-4 py-8 text-center text-gray-400">Fetching instructors...</td></tr>';
+
+        try {
+          const response = await fetch("get_teachers.php");
+          const teachers = await response.json();
+          teacherList.innerHTML = "";
+
+          if (teachers.length === 0) {
+            teacherList.innerHTML =
+              '<tr><td colspan="3" class="px-4 py-4 text-center text-gray-400 italic">No teachers found</td></tr>';
+          } else {
+            teachers.forEach((t) => {
+              const initials = t.instructor_name
+                ? t.instructor_name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")
+                    .toUpperCase()
+                    .substring(0, 2)
+                : "??";
+
+              // Parsing the comma-separated availability string
+              const teacherDays = t.availability
+                ? t.availability.split(", ")
+                : [];
+
+              teacherList.innerHTML += `
+                <tr class="hover:bg-gray-50 transition border-b border-gray-50">
+                    <td class="px-4 py-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold text-xs shrink-0">
+                                ${initials}
+                            </div>
+                            <div>
+                                <div class="font-bold text-gray-800 text-sm">${t.instructor_name}</div>
+                                <div class="text-[10px] text-gray-400 uppercase font-bold tracking-tight">${t.expertise || "General"}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-4 py-4">
+                        <div class="text-[10px] text-gray-400 font-bold mb-1 uppercase tracking-tight">Availability:</div>
+                        <div class="flex flex-col gap-1">
+                            <div class="flex flex-wrap gap-1">
+                                ${
+                                  teacherDays.length > 0
+                                    ? teacherDays
+                                        .map(
+                                          (day) => `
+                                        <span class="px-1.5 py-0.5 bg-indigo-50 text-indigo-600 text-[9px] font-black rounded border border-indigo-100 uppercase">
+                                            ${day.trim()}
+                                        </span>`,
+                                        )
+                                        .join("")
+                                    : '<span class="text-[9px] text-gray-300 italic">No days set</span>'
+                                }
+                            </div>
+                            <div class="text-gray-700 font-bold text-xs mt-0.5">
+                                ${t.start_time ? t.start_time.substring(0, 5) : "--:--"} - ${t.end_time ? t.end_time.substring(0, 5) : "--:--"}
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-4 py-4 text-right">
+                        <button onclick="assignToRoom(${t.teacher_id}, ${room.id})" 
+                                class="px-4 py-1.5 bg-indigo-50 text-indigo-600 rounded-lg text-[10px] font-extrabold uppercase hover:bg-indigo-600 hover:text-white transition-all">
+                            Assign
+                        </button>
+                    </td>
+                </tr>`;
+            });
+          }
+        } catch (error) {
+          console.error("Match error:", error);
+          teacherList.innerHTML =
+            '<tr><td colspan="3" class="px-4 py-4 text-center text-red-400">Failed to load teachers</td></tr>';
+        }
+
+        modal.classList.remove("hidden");
+        lucide.createIcons();
+      }
+
+      function closeRoomModal() {
+        document.getElementById("viewModal").classList.add("hidden");
+      }
+
+      async function assignToRoom(teacherId, roomId) {
+        const formData = new FormData();
+        formData.append("teacher_id", teacherId);
+        formData.append("room_id", roomId);
+        // Optional: formData.append("subject_id", ""); // Ipadala nang empty
+
+        const response = await fetch("assign_schedule.php", {
+          method: "POST",
+          body: formData,
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          alert("✅ Teacher assigned successfully!");
+          window.location.href = "Dashboard.html"; // Redirect agad para makita ang update
+        } else {
+          alert("❌ Error: " + result.message);
+        }
+      }
+
+      document
+        .getElementById("tableSearch")
+        .addEventListener("keyup", function () {
+          const val = this.value.toLowerCase();
+          document.querySelectorAll("#roomTableBody tr").forEach((row) => {
+            row.style.display = row.innerText.toLowerCase().includes(val)
+              ? ""
+              : "none";
+          });
+        });
+
+      window.onload = fetchRooms;
+    </script>
+  </body>
+</html>

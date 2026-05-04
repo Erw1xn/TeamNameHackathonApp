@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teacher Management - SchedSmart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- PDF.js Library for text extraction -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  </head>
+  <body class="bg-gray-50 font-sans text-gray-900">
+    <div class="flex min-h-screen">
+      <!-- Sidebar -->
+      <aside
+        class="w-64 bg-indigo-900 text-white flex flex-col fixed h-full shadow-xl"
+      >
+        <div
+          class="p-6 text-2xl font-bold border-b border-indigo-800 tracking-tight"
+        >
+          SchedSmart
+        </div>
+        <nav class="flex-grow p-4 space-y-2">
+          <a
+            href="Dashboard.html"
+            class="flex items-center gap-3 p-3 hover:bg-indigo-800 rounded-lg transition"
+          >
+            <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
+          </a>
+          <a
+            href="Rooms.html"
+            class="flex items-center gap-3 p-3 hover:bg-indigo-800 rounded-lg transition"
+          >
+            <i data-lucide="door-open" class="w-5 h-5"></i> Rooms
+          </a>
+          <a
+            href="Teacher.html"
+            class="flex items-center gap-3 p-3 bg-indigo-700/50 rounded-lg transition text-white border border-indigo-500/30"
+          >
+            <i data-lucide="users" class="w-5 h-5"></i> Teachers
+          </a>
+          <a
+            href="Subjects.html"
+            class="flex items-center gap-3 p-3 hover:bg-indigo-800 rounded-lg transition"
+          >
+            <i data-lucide="book-open"></i> Subjects
+          </a>
+        </nav>
+      </aside>
+
+      <main class="flex-1 ml-64 p-8">
+        <div class="max-w-6xl mx-auto">
+          <header class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 tracking-tight">
+              Teacher Management
+            </h1>
+            <p class="text-gray-500 mt-1">
+              Register instructors manually or import from a PDF schedule.
+            </p>
+          </header>
+
+          <!-- Registration Form -->
+          <form
+            id="teacherForm"
+            class="bg-white p-8 rounded-3xl shadow-sm border border-gray-200 mb-10 space-y-6"
+          >
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div class="space-y-1">
+                <label
+                  class="text-xs font-semibold text-gray-400 uppercase ml-1"
+                  >Instructor Name</label
+                >
+                <input
+                  type="text"
+                  name="instructor_name"
+                  placeholder="e.g. John Doe"
+                  class="w-full border border-gray-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition"
+                  required
+                />
+              </div>
+              <div class="space-y-1">
+                <label
+                  class="text-xs font-semibold text-gray-400 uppercase ml-1"
+                  >ID Number</label
+                >
+                <input
+                  type="text"
+                  name="ID"
+                  placeholder="e.g. 2024-0001"
+                  class="w-full border border-gray-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition"
+                  required
+                />
+              </div>
+              <div class="space-y-1">
+                <label
+                  class="text-xs font-semibold text-gray-400 uppercase ml-1"
+                  >Expertise</label
+                >
+                <select
+                  name="expertise"
+                  class="w-full border border-gray-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white"
+                  required
+                >
+                  <option value="" disabled selected>Select Expertise</option>
+                  <option value="Programming">Programming</option>
+                  <option value="Math">Math</option>
+                  <option value="General Science">General Science</option>
+                  <option value="Web Development">Web Development</option>
+                  <option value="Network Security">Network Security</option>
+                  <option value="Database Systems">Database Systems</option>
+                  <option value="Multimedia Arts">Multimedia Arts</option>
+                  <option value="Ethics & Philosophy">
+                    Ethics & Philosophy
+                  </option>
+                  <option value="Business Management">
+                    Business Management
+                  </option>
+                  <option value="Social Sciences">Social Sciences</option>
+                  <option value="Physical Education">Physical Education</option>
+                </select>
+              </div>
+            </div>
+
+            <div
+              class="bg-gray-50/50 p-6 rounded-2xl border border-gray-100 flex flex-col lg:flex-row lg:items-start justify-between gap-8"
+            >
+              <!-- Days Selection -->
+              <div class="flex-1">
+                <p
+                  class="text-sm font-bold text-gray-700 mb-4 uppercase tracking-wider"
+                >
+                  Select Days Available:
+                </p>
+                <div class="flex flex-wrap gap-5">
+                  <label class="flex items-center gap-3 cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      name="availability[]"
+                      value="Mon"
+                      class="w-5 h-5 text-indigo-600 rounded-md border-gray-300"
+                    />
+                    <span class="text-sm text-gray-600">Mon</span>
+                  </label>
+                  <label class="flex items-center gap-3 cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      name="availability[]"
+                      value="Tue"
+                      class="w-5 h-5 text-indigo-600 rounded-md border-gray-300"
+                    />
+                    <span class="text-sm text-gray-600">Tue</span>
+                  </label>
+                  <label class="flex items-center gap-3 cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      name="availability[]"
+                      value="Wed"
+                      class="w-5 h-5 text-indigo-600 rounded-md border-gray-300"
+                    />
+                    <span class="text-sm text-gray-600">Wed</span>
+                  </label>
+                  <label class="flex items-center gap-3 cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      name="availability[]"
+                      value="Thu"
+                      class="w-5 h-5 text-indigo-600 rounded-md border-gray-300"
+                    />
+                    <span class="text-sm text-gray-600">Thu</span>
+                  </label>
+                  <label class="flex items-center gap-3 cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      name="availability[]"
+                      value="Fri"
+                      class="w-5 h-5 text-indigo-600 rounded-md border-gray-300"
+                    />
+                    <span class="text-sm text-gray-600">Fri</span>
+                  </label>
+                  <label class="flex items-center gap-3 cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      name="availability[]"
+                      value="Sat"
+                      class="w-5 h-5 text-indigo-600 rounded-md border-gray-300"
+                    />
+                    <span class="text-sm text-gray-600">Sat</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Time Selection -->
+              <div class="lg:border-l lg:pl-8 border-gray-200">
+                <p
+                  class="text-sm font-bold text-gray-700 mb-4 uppercase tracking-wider"
+                >
+                  Daily Shift Hours:
+                </p>
+                <div class="flex items-center gap-3">
+                  <input
+                    type="time"
+                    name="start_time"
+                    class="border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500/20 transition"
+                  />
+                  <span class="text-gray-400 font-bold">to</span>
+                  <input
+                    type="time"
+                    name="end_time"
+                    class="border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500/20 transition"
+                  />
+                </div>
+              </div>
+
+              <!-- Form Buttons -->
+              <div class="flex items-center gap-4 lg:self-end">
+                <div class="relative">
+                  <input
+                    type="file"
+                    id="pdfUpload"
+                    class="hidden"
+                    accept=".pdf"
+                  />
+                  <button
+                    type="button"
+                    id="pdfBtn"
+                    onclick="document.getElementById('pdfUpload').click()"
+                    class="flex items-center gap-2 bg-white border border-gray-200 text-gray-600 px-6 py-3 rounded-xl font-bold hover:bg-gray-50 transition shadow-sm"
+                  >
+                    <i
+                      data-lucide="file-up"
+                      class="w-5 h-5 text-indigo-500"
+                    ></i>
+                    <span id="pdfBtnText">Import PDF</span>
+                  </button>
+                </div>
+
+                <button
+                  type="submit"
+                  class="bg-indigo-600 text-white px-10 py-3 rounded-xl font-bold hover:bg-indigo-700 transition shadow-lg shadow-indigo-200"
+                >
+                  Add Teacher
+                </button>
+              </div>
+            </div>
+          </form>
+
+          <!-- Table Section -->
+          <section
+            class="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden"
+          >
+            <div
+              class="p-6 bg-gray-50/50 border-b border-gray-200 flex flex-col md:flex-row md:items-center justify-between gap-4"
+            >
+              <h2 class="font-bold text-gray-800 text-lg">Existing Teachers</h2>
+              <!-- Search Bar Added -->
+              <div class="relative w-full md:w-72">
+                <i
+                  data-lucide="search"
+                  class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+                ></i>
+                <input
+                  type="text"
+                  id="teacherSearch"
+                  placeholder="Search teachers..."
+                  class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition"
+                />
+              </div>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead
+                  class="bg-white text-[11px] uppercase text-gray-400 font-bold tracking-widest border-b border-gray-100"
+                >
+                  <tr>
+                    <th class="px-8 py-5">Teacher ID</th>
+                    <th class="px-8 py-5">Instructor Name</th>
+                    <th class="px-8 py-5">ID Number</th>
+                    <th class="px-8 py-5">Expertise</th>
+                    <th class="px-8 py-5">Availability</th>
+                    <th class="px-8 py-5">Time Slot</th>
+                  </tr>
+                </thead>
+                <tbody
+                  id="teacherTableBody"
+                  class="divide-y divide-gray-50"
+                ></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      lucide.createIcons();
+
+      // Global variable to store teachers for searching
+      let allTeachers = [];
+
+      // 1. PDF.js Configuration
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+      // 2. Fetch and display teachers
+      async function fetchTeachers() {
+        try {
+          const response = await fetch("get_teachers.php");
+          const teachers = await response.json();
+
+          // Sort by teacher_id descending (Pababa)
+          allTeachers = teachers.sort((a, b) => b.teacher_id - a.teacher_id);
+
+          renderTable(allTeachers);
+        } catch (err) {
+          console.error("Error loading teachers:", err);
+        }
+      }
+
+      function renderTable(data) {
+        const tbody = document.getElementById("teacherTableBody");
+        tbody.innerHTML = "";
+
+        data.forEach((t) => {
+          const availArray = t.availability ? t.availability.split(", ") : [];
+          const availabilityHtml =
+            availArray
+              .map(
+                (day) =>
+                  `<span class="px-2.5 py-1 bg-indigo-50 text-indigo-600 text-[10px] font-black rounded-lg border border-indigo-100 uppercase tracking-tighter mr-1">
+                          ${day}
+                      </span>`,
+              )
+              .join("") ||
+            '<span class="text-gray-300 italic text-xs">None set</span>';
+
+          const timeDisplay =
+            t.start_time && t.end_time
+              ? `<span class="text-gray-700 font-bold">${t.start_time.substring(0, 5)} - ${t.end_time.substring(0, 5)}</span>`
+              : `<span class="text-gray-300 italic text-xs">Not set</span>`;
+
+          tbody.innerHTML += `
+                      <tr class="hover:bg-gray-50/50 transition">
+                          <td class="px-8 py-5 text-sm font-mono font-bold text-indigo-500">#${t.teacher_id}</td>
+                          <td class="px-8 py-5 font-bold text-gray-800">${t.instructor_name}</td>
+                          <td class="px-8 py-5 text-sm text-gray-500 font-medium">${t.ID}</td>
+                          <td class="px-8 py-5">
+                              <span class="px-3 py-1 bg-gray-100 text-gray-600 text-xs rounded-full font-bold">
+                                  ${t.expertise || "General"}
+                              </span>
+                          </td>
+                          <td class="px-8 py-5">${availabilityHtml}</td>
+                          <td class="px-8 py-5 text-sm">${timeDisplay}</td>
+                      </tr>
+                  `;
+        });
+      }
+
+      // Search Functionality
+      document
+        .getElementById("teacherSearch")
+        .addEventListener("input", function (e) {
+          const searchTerm = e.target.value.toLowerCase();
+          const filtered = allTeachers.filter(
+            (t) =>
+              t.instructor_name.toLowerCase().includes(searchTerm) ||
+              t.ID.toLowerCase().includes(searchTerm) ||
+              (t.expertise && t.expertise.toLowerCase().includes(searchTerm)),
+          );
+          renderTable(filtered);
+        });
+
+      // 3. Handle PDF Upload & AI Processing
+      document
+        .getElementById("pdfUpload")
+        .addEventListener("change", async function (e) {
+          const file = e.target.files[0];
+          if (!file) return;
+
+          const btnText = document.getElementById("pdfBtnText");
+          const btn = document.getElementById("pdfBtn");
+
+          btnText.innerText = "Extracting...";
+          btn.classList.add("opacity-50", "cursor-not-allowed");
+
+          try {
+            const arrayBuffer = await file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+            let fullText = "";
+
+            for (let i = 1; i <= pdf.numPages; i++) {
+              const page = await pdf.getPage(i);
+              const textContent = await page.getTextContent();
+              fullText += textContent.items.map((item) => item.str).join(" ");
+            }
+
+            const response = await fetch("ai_import_handler.php", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ pdfText: fullText }),
+            });
+
+            const result = await response.json();
+
+            if (result.status === "success") {
+              alert(`Import Successful! Added ${result.count} teachers.`);
+              fetchTeachers();
+            } else {
+              alert("Error: " + result.message);
+            }
+          } catch (err) {
+            console.error("PDF Error:", err);
+            alert("Failed to process PDF.");
+          } finally {
+            btnText.innerText = "Import PDF";
+            btn.classList.remove("opacity-50", "cursor-not-allowed");
+            e.target.value = "";
+          }
+        });
+
+      // 4. Handle Manual Form Submission
+      document
+        .getElementById("teacherForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const formData = new FormData(e.target);
+
+          try {
+            const response = await fetch("Teacher.php", {
+              method: "POST",
+              body: formData,
+            });
+            const result = await response.text();
+
+            if (result.trim() === "Success") {
+              e.target.reset();
+              fetchTeachers();
+            } else {
+              alert("Error: " + result);
+            }
+          } catch (err) {
+            console.error("Error submitting form:", err);
+          }
+        });
+
+      window.onload = fetchTeachers;
+    </script>
+  </body>
+</html>
